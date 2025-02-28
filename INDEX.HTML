@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TravelAr Turismo - Disponibilidad</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="login-section" class="centered">
+    <h1>TravelAr Turismo 💫</h1>
+    <div class="login-box">
+      <input type="text" id="user-id" placeholder="ID">
+      <input type="password" id="user-password" placeholder="Contraseña">
+      <button id="login-button">Ingresar</button>
+      <button id="guest-button">Invitado</button>
+    </div>
+  </div>
+
+  <div id="main-content" class="hidden">
+    <button id="logout-button" class="logout-btn">Cerrar Sesión</button>
+
+    <div id="admin-tools">
+      <input type="file" id="excel-input" accept=".xlsx, .xls">
+      <button id="upload-button">Cargar</button>
+    </div>
+    
+    <h2>Disponibilidad</h2>
+    <table id="availability-table">
+      <thead>
+        <tr>
+          <th>Destino</th>
+          <th>Fecha</th>
+          <th>Disponible</th>
+          <th>Tarifa</th>
+          <th>Gto Adm</th>
+          <th>Duración</th>
+          <th>Hotel</th>
+          <th>Régimen</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Las filas se generarán dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="scripts.js"></script>
+</body>
+</html>

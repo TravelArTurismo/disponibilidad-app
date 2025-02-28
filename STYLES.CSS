@@ -1,0 +1,194 @@
+/* Reset general */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e9f1f7; /* Fondo azul claro */
+  color: #2c3e50; /* Color de texto oscuro y elegante */
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* Sección centrada de login */
+.centered {
+  text-align: center;
+  margin-top: 120px;
+}
+
+.hidden {
+  display: none;
+}
+
+h1 {
+  font-size: 2.2em;
+  font-weight: 350;
+  color: #34495e; /* Gris azulado elegante */
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+h2 {
+  margin-top: 40px;
+  color: #f39c12; /* Amarillo dorado sutil */
+  font-size: 1.8em;
+  font-weight: 500;
+}
+
+.login-box {
+  background: #fff;
+  padding: 40px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  max-width: 400px;
+  margin: 0 auto;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-box:hover {
+  transform: scale(1.03); /* Efecto sutil de zoom */
+}
+
+input[type="text"], input[type="password"] {
+  width: 100%;
+  padding: 15px;
+  margin: 20px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1.1em;
+  color: #34495e;
+  background-color: #f4f6f7; /* Gris muy claro */
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+  border-color: #f39c12; /* Resalta con el color dorado */
+  background-color: #fff;
+}
+
+button {
+  padding: 14px 28px;
+  margin: 15px 0;
+  border: none;
+  border-radius: 25px;
+  background-color: #2980b9; /* Azul suave */
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1.2em;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #3498db; /* Azul más brillante al hacer hover */
+  transform: translateY(-3px); /* Efecto de desplazamiento */
+}
+
+button:active {
+  transform: translateY(0); /* Efecto al presionar */
+}
+
+/* Estilos de la tabla de disponibilidad */
+#availability-table {
+  margin: 50px auto;
+  width: 90%;
+  border-collapse: collapse;
+  text-align: center;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+#availability-table th, #availability-table td {
+  padding: 20px 15px;
+  border: 1px solid #ddd;
+}
+
+#availability-table th {
+  background-color: #2980b9; /* Azul suave */
+  color: white;
+  font-size: 1.1em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#availability-table td {
+  background-color: #f4f6f7;
+  color: #34495e;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease;
+}
+
+#availability-table td:hover {
+  background-color: #e1f5fe; /* Azul claro al hacer hover */
+}
+
+#availability-table td.red {
+  color: #e74c3c; /* Rojo suave para los tiempos excedidos */
+  font-weight: 600;
+}
+
+#availability-table th:nth-child(4), /* Columna Tarifa */
+#availability-table th:nth-child(5), /* Columna Gto Adm */
+#availability-table td:nth-child(4), /* Columna Tarifa */
+#availability-table td:nth-child(5) /* Columna Gto Adm */ {
+  min-width: 150px; /* Aumentamos el tamaño de las columnas de Tarifa y Gto Adm */
+  text-align: center;
+}
+
+/* Estilo para el botón de cerrar sesión */
+.logout-btn {
+  background-color: #e74c3c; /* Rojo suave */
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  border-radius: 25px;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b; /* Rojo más fuerte al hacer hover */
+  transform: translateY(-3px);
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+}
+
+/* Estilo para el input de archivo Excel */
+#excel-input {
+  margin: 30px 0;
+  padding: 15px;
+  border: 2px solid #2980b9;
+  border-radius: 8px;
+  width: 100%;
+  background-color: #f4f6f7;
+  color: #34495e;
+}
+
+#excel-input:focus {
+  border-color: #f39c12;
+  background-color: #fff;
+}
+
+/* Animaciones de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#availability-table, .login-box, .logout-btn {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
