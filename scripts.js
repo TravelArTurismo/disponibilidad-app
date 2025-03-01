@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterDateInput = document.getElementById("filter-date");
   const filterDestinationInput = document.getElementById("filter-destination");
   const filterButton = document.getElementById("filter-button");
+  const clearFilterButton = document.getElementById("clear-filter-button"); // Nuevo botón
 
   const ADMIN_ID = "ADMIN";
   const ADMIN_PASSWORD = "1244";
@@ -143,6 +144,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     (!filterDestination || destinationCell.includes(filterDestination));
 
       row.style.display = showRow ? "" : "none";
+    });
+  });
+
+  // 📌 BORRAR FILTROS
+  clearFilterButton.addEventListener("click", () => {
+    filterDateInput.value = "";
+    filterDestinationInput.value = "";
+    document.querySelectorAll("#availability-table tbody tr").forEach(row => {
+      row.style.display = "";
     });
   });
 

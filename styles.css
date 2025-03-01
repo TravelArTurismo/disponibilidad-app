@@ -210,14 +210,16 @@ button:active {
 /* Estilos para los labels */
 .filter-container label {
   font-size: 1.1em;
-  font-weight: bold;
-  color: #34495e;
+  font-weight: bold; /* Negrita */
+  color: #164593;
   margin-bottom: 5px;
+  display: block; /* Cada label ocupa su propia línea */
 }
 
 /* Estilo del input de fecha */
 .filter-container input[type="date"] {
   width: 100%;
+  max-width: 200px; /* Tamaño reducido */
   padding: 10px;
   border: 2px solid #f39c12;
   border-radius: 8px;
@@ -227,31 +229,47 @@ button:active {
   transition: border-color 0.3s ease, background-color 0.3s ease;
   text-align: center;
   cursor: pointer;
+  appearance: none;
+  position: relative;
 }
 
-.filter-container input[type="date"]:focus {
+/* Agregar un icono de calendario */
+.filter-container input[type="date"]::-webkit-calendar-picker-indicator {
+  background: url('https://cdn-icons-png.flaticon.com/512/747/747310.png') no-repeat center;
+  background-size: 18px 18px;
+  cursor: pointer;
+  opacity: 0.7;
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  right: 10px;
+}
+
+/* Cuando pasas el mouse, el calendario se destaca */
+.filter-container input[type="date"]:hover {
   border-color: #e67e22;
-  background-color: #fff;
+  background-color: #fdf6e3;
 }
 
-/* Contenedor para "Filtrar por destino" (en línea con el input) */
+/* Contenedor para "Filtrar por destino" */
 .filter-destino-container {
   display: flex;
-  align-items: center;
-  width: 50%;
+  flex-direction: column; /* Para alinear los labels y inputs verticalmente */
+  align-items: flex-start;
+  width: 100%;
 }
 
 /* Estilo del input de destino */
 .filter-container input[type="text"] {
-  flex: 1;
+  width: 100%;
+  max-width: 250px; /* Ajuste del tamaño */
   padding: 8px;
   border: 2px solid #ddd;
   border-radius: 6px;
   font-size: 1em;
   background-color: #f4f6f7;
   color: #34495e;
-  max-width: 150px; /* Tamaño más pequeño */
-  margin-left: 10px;
+  transition: 0.3s;
 }
 
 .filter-container input[type="text"]:focus {
@@ -263,10 +281,10 @@ button:active {
 .filter-container button {
   background-color: #2980b9;
   color: #fff;
-  padding: 3px 5px;
+  padding: 10px 15px;
   border: none;
   border-radius: 8px;
-  font-size: 0.9em;
+  font-size: 1em;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   align-self: center; /* Centrar botón */
@@ -314,4 +332,53 @@ button:active {
 /* Animación de entrada para la tabla filtrada */
 #filtered-table {
   animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Estilos del botón de limpiar filtro */
+#clear-filter-button {
+  background-color: #FFAA01;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-left: 10px;
+}
+
+#clear-filter-button:hover {
+  background-color: #e69500;
+}
+
+/* Botones de filtro y limpiar en mismo tamaño */
+#filter-button, #clear-filter-button {
+  width: 125px;
+  height: 50px;
+  font-size: 14px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
+  display: block;
+  margin: 5px 0; /* Elimina el centrado */
+  align-self: flex-start; /* Alinea los botones a la izquierda */
+}
+
+#clear-filter-button {
+  background-color: #FFAA01;
+}
+
+#clear-filter-button:hover {
+  background-color: #e69500;
+}
+
+#filter-button {
+  background-color: #164593;
+}
+
+#filter-button:hover {
+  background-color: #123b75;
 }
