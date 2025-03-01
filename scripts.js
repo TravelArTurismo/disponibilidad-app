@@ -60,6 +60,18 @@ document.addEventListener("DOMContentLoaded", () => {
     loginError.style.display = "block";
   };
 
+  const formatDateString = (dateString) => {
+    if (!dateString) return "N/A";
+
+    const parts = dateString.split("/");
+    if (parts.length === 3) {
+      let [day, month, year] = parts.map(part => part.padStart(2, "0")); // Asegurar formato de 2 dígitos
+      year = year.length === 2 ? `20${year}` : year; // Convertir año corto a largo
+      return `${day}/${month}/${year}`;
+    }
+    return dateString;
+  };
+
   const populateTable = (data) => {
     const tableBody = document.querySelector("#availability-table tbody");
     tableBody.innerHTML = "";
@@ -78,17 +90,15 @@ document.addEventListener("DOMContentLoaded", () => {
     data.forEach((row) => {
       const tableRow = document.createElement("tr");
 
-      ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col) => {
+      ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col, index) => {
         const cell = document.createElement("td");
 
         if (col === "FECHA" && row[col]) {
-          const dateParts = row[col].split("/");
-          if (dateParts.length === 3) {
-            row[col] = `${parseInt(dateParts[0], 10)}/${parseInt(dateParts[1], 10)}/${dateParts[2].slice(-2)}`;
-          }
+          cell.textContent = formatDateString(row[col]); // ✅ Mostrar fecha en formato DD/MM/YYYY
+        } else {
+          cell.textContent = row[col] || "N/A";
         }
 
-        cell.textContent = row[col] || "N/A";
         tableRow.appendChild(cell);
       });
 
@@ -130,32 +140,25 @@ document.addEventListener("DOMContentLoaded", () => {
     loginError.textContent = "";
   });
 
-  // 📌 FUNCIÓN PARA NORMALIZAR FECHA (quita ceros y ajusta el año)
-  function normalizarFecha(fecha) {
-    if (!fecha) return "";
-    let partes = fecha.split("/");
-    let dia = parseInt(partes[0], 10);
-    let mes = parseInt(partes[1], 10);
-    let año = partes[2].slice(-2); // Tomamos solo los últimos 2 dígitos del año
-    return `${dia}/${mes}/${año}`;
-  }
-
-  // 📌 FILTRO DE TABLA (Corrige problema de fecha)
+  // 📌 FILTRO DE TABLA
   filterButton.addEventListener("click", () => {
-    const filterDate = filterDateInput.value;
+    const filterDate = filterDateInput.value; // Fecha del input en formato YYYY-MM-DD
     const filterDestination = filterDestinationInput.value.trim().toLowerCase();
 
     document.querySelectorAll("#availability-table tbody tr").forEach(row => {
-      const dateCell = row.cells[1]?.textContent.trim();
+      const dateCell = row.cells[1]?.textContent.trim(); // Fecha en formato DD/MM/YYYY
       const destinationCell = row.cells[0]?.textContent.trim().toLowerCase();
 
-      let fechaFiltro = filterDate ? normalizarFecha(filterDate.split("-").reverse().join("/")) : "";
-      let fechaFila = normalizarFecha(dateCell);
+      let rowDateFormatted = "";
+      if (dateCell) {
+        const [day, month, year] = dateCell.split("/");
+        rowDateFormatted = `${year}-${month}-${day}`; // Convertir a YYYY-MM-DD
+      }
 
-      let coincideFecha = !filterDate || fechaFila === fechaFiltro;
-      let coincideDestino = !filterDestination || destinationCell.includes(filterDestination);
+      let showRow = (!filterDate || rowDateFormatted === filterDate) &&
+                    (!filterDestination || destinationCell.includes(filterDestination));
 
-      row.style.display = (coincideFecha && coincideDestino) ? "" : "none";
+      row.style.display = showRow ? "" : "none";
     });
   });
 
