@@ -192,3 +192,126 @@ button:active {
   animation: fadeIn 0.8s ease-in-out;
 }
 
+
+/* Estilos para el contenedor del filtro */
+.filter-container {
+  display: flex;
+  flex-direction: column; /* Acomoda los elementos uno debajo del otro */
+  align-items: flex-start;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  margin: 30px auto;
+}
+
+/* Estilos para los labels */
+.filter-container label {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #34495e;
+  margin-bottom: 5px;
+}
+
+/* Estilo del input de fecha */
+.filter-container input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #f39c12;
+  border-radius: 8px;
+  font-size: 1em;
+  background-color: #f4f6f7;
+  color: #34495e;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  text-align: center;
+  cursor: pointer;
+}
+
+.filter-container input[type="date"]:focus {
+  border-color: #e67e22;
+  background-color: #fff;
+}
+
+/* Contenedor para "Filtrar por destino" (en línea con el input) */
+.filter-destino-container {
+  display: flex;
+  align-items: center;
+  width: 50%;
+}
+
+/* Estilo del input de destino */
+.filter-container input[type="text"] {
+  flex: 1;
+  padding: 8px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  background-color: #f4f6f7;
+  color: #34495e;
+  max-width: 150px; /* Tamaño más pequeño */
+  margin-left: 10px;
+}
+
+.filter-container input[type="text"]:focus {
+  border-color: #f39c12;
+  background-color: #fff;
+}
+
+/* Estilos del botón de filtrar */
+.filter-container button {
+  background-color: #2980b9;
+  color: #fff;
+  padding: 3px 5px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  align-self: center; /* Centrar botón */
+  margin-top: 10px;
+}
+
+.filter-container button:hover {
+  background-color: #3498db;
+  transform: translateY(-2px);
+}
+
+/* Estilos para la tabla filtrada */
+#filtered-table {
+  margin: 30px auto;
+  width: 90%;
+  border-collapse: collapse;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+#filtered-table th, #filtered-table td {
+  padding: 15px;
+  border: 1px solid #ddd;
+}
+
+#filtered-table th {
+  background-color: #2980b9;
+  color: white;
+  font-size: 1.1em;
+  text-transform: uppercase;
+}
+
+#filtered-table td {
+  background-color: #f4f6f7;
+  color: #34495e;
+  font-size: 1em;
+}
+
+#filtered-table td:hover {
+  background-color: #e1f5fe;
+}
+
+/* Animación de entrada para la tabla filtrada */
+#filtered-table {
+  animation: fadeIn 0.8s ease-in-out;
+}

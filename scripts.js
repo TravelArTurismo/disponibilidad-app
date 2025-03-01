@@ -9,6 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const logoutButton = document.getElementById("logout-button");
   const loginError = document.getElementById("login-error");
 
+  const filterDateInput = document.getElementById("filter-date");
+  const filterDestinationInput = document.getElementById("filter-destination");
+  const filterButton = document.getElementById("filter-button");
+
   const ADMIN_ID = "ADMIN";
   const ADMIN_PASSWORD = "1244";
 
@@ -64,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const emptyRow = document.createElement("tr");
       const emptyCell = document.createElement("td");
       emptyCell.textContent = "No hay datos disponibles";
-      emptyCell.setAttribute("colspan", "9"); // Ajusta el número de columnas
+      emptyCell.setAttribute("colspan", "9");
       emptyCell.style.textAlign = "center";
       emptyRow.appendChild(emptyCell);
       tableBody.appendChild(emptyRow);
@@ -77,11 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
       ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col) => {
         const cell = document.createElement("td");
 
-        // 📌 Si la columna es "FECHA", reformatearla antes de mostrarla
         if (col === "FECHA" && row[col]) {
-          const dateParts = row[col].split("/"); // Suponiendo que viene en MM/DD/YYYY
+          const dateParts = row[col].split("/");
           if (dateParts.length === 3) {
-            row[col] = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`; // Convertir a DD/MM/YYYY
+            row[col] = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
           }
         }
 
@@ -110,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((response) => response.json())
       .then((data) => {
         alert(data.message);
-        loadDataFromServer(); // 📌 Recargar la tabla con los nuevos datos
+        loadDataFromServer();
       })
       .catch((error) => {
         alert("Error al subir el archivo.");
@@ -127,5 +130,21 @@ document.addEventListener("DOMContentLoaded", () => {
     loginError.textContent = "";
   });
 
-  loadDataFromServer(); // 📌 Cargar datos al inicio
+  // 📌 FILTRO DE TABLA
+  filterButton.addEventListener("click", () => {
+    const filterDate = filterDateInput.value;
+    const filterDestination = filterDestinationInput.value.trim().toLowerCase();
+
+    document.querySelectorAll("#availability-table tbody tr").forEach(row => {
+      const dateCell = row.cells[1]?.textContent.trim();
+      const destinationCell = row.cells[0]?.textContent.trim().toLowerCase();
+
+      let showRow = (!filterDate || dateCell.split("/").reverse().join("-") === filterDate) &&
+                    (!filterDestination || destinationCell.includes(filterDestination));
+
+      row.style.display = showRow ? "" : "none";
+    });
+  });
+
+  loadDataFromServer();
 });
