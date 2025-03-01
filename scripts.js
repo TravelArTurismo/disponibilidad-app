@@ -76,6 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col) => {
         const cell = document.createElement("td");
+
+        // 📌 Si la columna es "FECHA", reformatearla antes de mostrarla
+        if (col === "FECHA" && row[col]) {
+          const dateParts = row[col].split("/"); // Suponiendo que viene en MM/DD/YYYY
+          if (dateParts.length === 3) {
+            row[col] = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`; // Convertir a DD/MM/YYYY
+          }
+        }
+
         cell.textContent = row[col] || "N/A";
         tableRow.appendChild(cell);
       });
