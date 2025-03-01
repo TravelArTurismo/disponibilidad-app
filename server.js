@@ -5,7 +5,7 @@ const XLSX = require("xlsx");
 const cors = require("cors");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -57,5 +57,5 @@ app.get("*", (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en: http://localhost:${PORT}`);
+  console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
 });
