@@ -12,12 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterDateInput = document.getElementById("filter-date");
   const filterDestinationInput = document.getElementById("filter-destination");
   const filterButton = document.getElementById("filter-button");
-  const clearFilterButton = document.getElementById("clear-filter-button"); // Nuevo botón
+  const clearFilterButton = document.getElementById("clear-filter-button");
 
   const ADMIN_ID = "ADMIN";
   const ADMIN_PASSWORD = "1244";
 
-  // 📌 Cargar datos desde el servidor
   const loadDataFromServer = () => {
     fetch("/data")
       .then((response) => response.json())
@@ -42,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mainContent.classList.remove("hidden");
       adminTools.classList.remove("hidden");
       loginError.textContent = "";
-      loadDataFromServer(); // 📌 Cargar datos después de iniciar sesión
+      loadDataFromServer();
     } else {
       showError("ID o Contraseña incorrectos");
     }
@@ -53,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     mainContent.classList.remove("hidden");
     adminTools.classList.add("hidden");
     loginError.textContent = "";
-    loadDataFromServer(); // 📌 Cargar datos al ingresar como invitado
+    loadDataFromServer();
   });
 
   const showError = (message) => {
@@ -85,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (col === "FECHA" && row[col]) {
           const dateParts = row[col].split("/");
           if (dateParts.length === 3) {
-            row[col] = `${dateParts[1]}/${dateParts[0]}/${dateParts[2]}`;
+            row[col] = `${parseInt(dateParts[0], 10)}/${parseInt(dateParts[1], 10)}/${dateParts[2].slice(-2)}`;
           }
         }
 
@@ -131,7 +130,17 @@ document.addEventListener("DOMContentLoaded", () => {
     loginError.textContent = "";
   });
 
-  // 📌 FILTRO DE TABLA
+  // 📌 FUNCIÓN PARA NORMALIZAR FECHA (quita ceros y ajusta el año)
+  function normalizarFecha(fecha) {
+    if (!fecha) return "";
+    let partes = fecha.split("/");
+    let dia = parseInt(partes[0], 10);
+    let mes = parseInt(partes[1], 10);
+    let año = partes[2].slice(-2); // Tomamos solo los últimos 2 dígitos del año
+    return `${dia}/${mes}/${año}`;
+  }
+
+  // 📌 FILTRO DE TABLA (Corrige problema de fecha)
   filterButton.addEventListener("click", () => {
     const filterDate = filterDateInput.value;
     const filterDestination = filterDestinationInput.value.trim().toLowerCase();
@@ -140,10 +149,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const dateCell = row.cells[1]?.textContent.trim();
       const destinationCell = row.cells[0]?.textContent.trim().toLowerCase();
 
-      let showRow = (!filterDate || dateCell.split("/").reverse().join("-") === filterDate) &&
-                    (!filterDestination || destinationCell.includes(filterDestination));
+      let fechaFiltro = filterDate ? normalizarFecha(filterDate.split("-").reverse().join("/")) : "";
+      let fechaFila = normalizarFecha(dateCell);
 
-      row.style.display = showRow ? "" : "none";
+      let coincideFecha = !filterDate || fechaFila === fechaFiltro;
+      let coincideDestino = !filterDestination || destinationCell.includes(filterDestination);
+
+      row.style.display = (coincideFecha && coincideDestino) ? "" : "none";
     });
   });
 
