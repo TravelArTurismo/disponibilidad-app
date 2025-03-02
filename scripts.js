@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (col === "FECHA" && row[col]) {
           cell.textContent = formatDateString(row[col]); // ✅ Mostrar fecha en formato DD/MM/YYYY
         } else {
-          cell.textContent = row[col] || "N/A";
+          cell.textContent = row[col] ? row[col] : "";
         }
 
         tableRow.appendChild(cell);
