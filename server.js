@@ -3,6 +3,7 @@ const multer = require("multer");
 const fs = require("fs");
 const XLSX = require("xlsx");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,16 +11,16 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(cors());
-app.use(express.static(__dirname));
+app.use(express.static(__dirname)); // Sirve index.html automáticamente
 
 // Configurar Multer para subir archivos
 const upload = multer({ dest: "uploads/" });
 
+// 📌 Ruta para el archivo data.json (guardado en /tmp para persistencia en Render)
+const dataFilePath = path.join("/tmp", "data.json");
+
 // 📌 Cargar el último libro guardado al iniciar el servidor
 let jsonData = [];
-const dataFilePath = "data.json";
-
-
 if (fs.existsSync(dataFilePath)) {
   try {
     jsonData = JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
@@ -40,7 +41,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
     const sheet = workbook.Sheets[sheetName];
     jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
 
-    // Guardar los datos en data.json
+    // Guardar los datos en data.json (en /tmp para persistencia)
     fs.writeFileSync(dataFilePath, JSON.stringify(jsonData, null, 2));
 
     // Eliminar el archivo Excel subido
