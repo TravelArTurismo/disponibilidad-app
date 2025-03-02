@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
-const ExcelJS = require("exceljs");
+const XLSX = require("xlsx");
 const cors = require("cors");
 const path = require("path");
 
@@ -31,22 +31,15 @@ if (fs.existsSync(dataFilePath)) {
 }
 
 // 📌 Ruta para subir un archivo Excel
-app.post("/upload", upload.single("file"), async (req, res) => {
+app.post("/upload", upload.single("file"), (req, res) => {
   try {
     const filePath = req.file.path;
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.readFile(filePath);
 
-    const worksheet = workbook.worksheets[0]; // Primera hoja
-    const data = [];
-
-    worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber === 1) return; // Omitir encabezados si es necesario
-      const rowData = row.values.slice(1); // Eliminar índice vacío
-      data.push(rowData);
-    });
-
-    jsonData = data;
+    // Leer el archivo Excel
+    const workbook = XLSX.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
 
     // Guardar los datos en data.json (en /tmp para persistencia)
     fs.writeFileSync(dataFilePath, JSON.stringify(jsonData, null, 2));
@@ -64,7 +57,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 app.get("/data", (req, res) => {
   res.json(jsonData);
 });
-
 
 // 📌 Asegurar que todas las rutas sirvan `index.html`
 app.get("*", (req, res) => {
