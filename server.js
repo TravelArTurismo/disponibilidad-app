@@ -6,6 +6,7 @@ const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const DATA_FILE = "data.json";  // 📌 Archivo donde se guardan los datos
 
 // Middleware
 app.use(express.json());
@@ -26,8 +27,8 @@ app.post("/upload", upload.single("file"), (req, res) => {
     const sheet = workbook.Sheets[sheetName];
     const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
 
-    // 📌 Guardar los datos en data.json (sobreescribiendo)
-    fs.writeFileSync("data.json", JSON.stringify(jsonData, null, 2));
+    // 📌 Guardar los datos en data.json (sobreescribiendo con el último archivo subido)
+    fs.writeFileSync(DATA_FILE, JSON.stringify(jsonData, null, 2));
 
     // 📌 Eliminar el archivo Excel subido (para que no se acumulen archivos)
     fs.unlinkSync(filePath);
@@ -41,11 +42,11 @@ app.post("/upload", upload.single("file"), (req, res) => {
 // 📌 Ruta para obtener los datos guardados
 app.get("/data", (req, res) => {
   try {
-    if (fs.existsSync("data.json")) {
-      const data = fs.readFileSync("data.json", "utf8");
+    if (fs.existsSync(DATA_FILE)) {
+      const data = fs.readFileSync(DATA_FILE, "utf8");
       res.json(JSON.parse(data));
     } else {
-      res.json([]);
+      res.json([]);  // 📌 Si no hay archivo, devolver un array vacío
     }
   } catch (error) {
     res.status(500).json({ message: "Error al obtener los datos", error });
