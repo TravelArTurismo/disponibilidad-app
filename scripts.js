@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const ADMIN_PASSWORD = "1244";
 
 
+
   const loadDataFromServer = () => {
     fetch("/data")
       .then((response) => response.json())
