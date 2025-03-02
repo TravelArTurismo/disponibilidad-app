@@ -10,24 +10,26 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(cors());
-app.use(express.static(__dirname)); // 📌 Ahora sirve index.html automáticamente
+app.use(express.static(__dirname)); // 📌 Sirve index.html automáticamente
 
-// Configurar multer para subir archivos
+// 📌 Configurar Multer para subir archivos
 const upload = multer({ dest: "uploads/" });
 
 // 📌 Ruta para subir un archivo Excel
 app.post("/upload", upload.single("file"), (req, res) => {
   try {
     const filePath = req.file.path;
+
+    // 📌 Leer el archivo Excel
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
     const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
 
-    // Guardar los datos en un archivo JSON
+    // 📌 Guardar los datos en data.json (sobreescribiendo)
     fs.writeFileSync("data.json", JSON.stringify(jsonData, null, 2));
 
-    // Eliminar el archivo temporal
+    // 📌 Eliminar el archivo Excel subido (para que no se acumulen archivos)
     fs.unlinkSync(filePath);
 
     res.json({ message: "Archivo subido y procesado correctamente" });
@@ -55,7 +57,7 @@ app.get("*", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-// Iniciar servidor
+// 📌 Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
 });
