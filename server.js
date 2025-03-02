@@ -10,10 +10,23 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(cors());
-app.use(express.static(__dirname)); // Sirve index.html automáticamente
+app.use(express.static(__dirname));
 
 // Configurar Multer para subir archivos
 const upload = multer({ dest: "uploads/" });
+
+// 📌 Cargar el último libro guardado al iniciar el servidor
+let jsonData = [];
+const dataFilePath = "data.json";
+
+if (fs.existsSync(dataFilePath)) {
+  try {
+    jsonData = JSON.parse(fs.readFileSync(dataFilePath, "utf8"));
+  } catch (error) {
+    console.error("⚠ Error al leer data.json:", error);
+    jsonData = []; // Evita que se rompa si el archivo está corrupto
+  }
+}
 
 // 📌 Ruta para subir un archivo Excel
 app.post("/upload", upload.single("file"), (req, res) => {
@@ -24,40 +37,31 @@ app.post("/upload", upload.single("file"), (req, res) => {
     const workbook = XLSX.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
+    jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
 
-    // Guardar los datos en data.json (manteniéndolo después del reinicio)
-    fs.writeFileSync("data.json", JSON.stringify(jsonData, null, 2));
+    // Guardar los datos en data.json
+    fs.writeFileSync(dataFilePath, JSON.stringify(jsonData, null, 2));
 
     // Eliminar el archivo Excel subido
     fs.unlinkSync(filePath);
 
-    res.json({ message: "Disponibilidad actualizada correctamente" });
+    res.json({ message: "📂 Archivo subido y procesado correctamente" });
   } catch (error) {
-    res.status(500).json({ message: "Error al procesar el archivo", error });
+    res.status(500).json({ message: "❌ Error al procesar el archivo", error });
   }
 });
 
-// 📌 Ruta para obtener los datos guardados (manteniendo el último libro cargado)
+// 📌 Ruta para obtener los datos guardados
 app.get("/data", (req, res) => {
-  try {
-    if (fs.existsSync("data.json")) {
-      const data = fs.readFileSync("data.json", "utf8");
-      res.json(JSON.parse(data));
-    } else {
-      res.json([]); // Devuelve vacío si no hay datos guardados
-    }
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener los datos", error });
-  }
+  res.json(jsonData);
 });
 
-// Asegurar que todas las rutas sirvan `index.html`
+// 📌 Asegurar que todas las rutas sirvan `index.html`
 app.get("*", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-// Iniciar servidor
+// 📌 Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
 });
