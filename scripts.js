@@ -11,13 +11,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const filterDateInput = document.getElementById("filter-date");
   const filterDestinationInput = document.getElementById("filter-destination");
+  const destinationList = document.getElementById("destination-list");
   const filterButton = document.getElementById("filter-button");
   const clearFilterButton = document.getElementById("clear-filter-button");
 
   const ADMIN_ID = "ADMIN";
   const ADMIN_PASSWORD = "1244";
 
-
+  const destinations = [
+    "VILLA CARLOS PAZ", "VILLA DE MERLO", "MACACHIN LA PAMPA", "MENDOZA", "SAN RAFAEL",
+    "AIMOGASTA", "SALTA", "CATARATAS DEL IGUAZU", "PARANA", "GUALEGUAYCHU", "COLON",
+    "SAN BERNARDO", "SAN CLEMENTE", "MAR DEL PLATA", "TANDIL", "TERMAS DE TAPALQUE",
+    "TERMAS DE GUAYCHU", "SAN PEDRO", "CAMPO LA HERRADURA", "CAMBORIU", "BARILOCHE",
+    "CALAFATE", "USHUAIA"
+  ];
 
   const loadDataFromServer = () => {
     fetch("/data")
@@ -29,12 +36,29 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => console.error("Error al cargar datos:", error));
   };
 
+  const populateDestinationList = () => {
+    destinationList.innerHTML = "";
+    destinations.forEach(dest => {
+      const option = document.createElement("option");
+      option.value = dest;
+      destinationList.appendChild(option);
+    });
+  };
+
+  filterDestinationInput.addEventListener("input", () => {
+    const value = filterDestinationInput.value.toLowerCase();
+    document.querySelectorAll("#destination-list option").forEach(option => {
+      option.style.display = option.value.toLowerCase().includes(value) ? "block" : "none";
+    });
+  });
+
   loginButton.addEventListener("click", () => {
     const userId = document.getElementById("user-id").value.trim();
     const userPassword = document.getElementById("user-password").value.trim();
 
     if (!userId || !userPassword) {
-      showError("Por favor, completa todos los campos.");
+      loginError.textContent = "Por favor, completa todos los campos.";
+      loginError.style.display = "block";
       return;
     }
 
@@ -45,7 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
       loginError.textContent = "";
       loadDataFromServer();
     } else {
-      showError("ID o Contraseña incorrectos");
+      loginError.textContent = "ID o Contraseña incorrectos";
+      loginError.style.display = "block";
     }
   });
 
@@ -56,57 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loginError.textContent = "";
     loadDataFromServer();
   });
-
-  const showError = (message) => {
-    loginError.textContent = message;
-    loginError.style.display = "block";
-  };
-
-  const formatDateString = (dateString) => {
-    if (!dateString) return "N/A";
-
-    const parts = dateString.split("/");
-    if (parts.length === 3) {
-      let [day, month, year] = parts.map(part => part.padStart(2, "0")); // Asegurar formato de 2 dígitos
-      year = year.length === 2 ? `20${year}` : year; // Convertir año corto a largo
-      return `${day}/${month}/${year}`;
-    }
-    return dateString;
-  };
-
-  const populateTable = (data) => {
-    const tableBody = document.querySelector("#availability-table tbody");
-    tableBody.innerHTML = "";
-
-    if (data.length === 0) {
-      const emptyRow = document.createElement("tr");
-      const emptyCell = document.createElement("td");
-      emptyCell.textContent = "No hay datos disponibles";
-      emptyCell.setAttribute("colspan", "9");
-      emptyCell.style.textAlign = "center";
-      emptyRow.appendChild(emptyCell);
-      tableBody.appendChild(emptyRow);
-      return;
-    }
-
-    data.forEach((row) => {
-      const tableRow = document.createElement("tr");
-
-      ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col, index) => {
-        const cell = document.createElement("td");
-
-        if (col === "FECHA" && row[col]) {
-          cell.textContent = formatDateString(row[col]); // ✅ Mostrar fecha en formato DD/MM/YYYY
-        } else {
-          cell.textContent = row[col] ? row[col] : "";
-        }
-
-        tableRow.appendChild(cell);
-      });
-
-      tableBody.appendChild(tableRow);
-    });
-  };
 
   uploadButton.addEventListener("click", () => {
     const file = excelInput.files[0];
@@ -142,19 +116,18 @@ document.addEventListener("DOMContentLoaded", () => {
     loginError.textContent = "";
   });
 
-  // 📌 FILTRO DE TABLA
   filterButton.addEventListener("click", () => {
-    const filterDate = filterDateInput.value; // Fecha del input en formato YYYY-MM-DD
+    const filterDate = filterDateInput.value;
     const filterDestination = filterDestinationInput.value.trim().toLowerCase();
 
     document.querySelectorAll("#availability-table tbody tr").forEach(row => {
-      const dateCell = row.cells[1]?.textContent.trim(); // Fecha en formato DD/MM/YYYY
+      const dateCell = row.cells[1]?.textContent.trim();
       const destinationCell = row.cells[0]?.textContent.trim().toLowerCase();
 
       let rowDateFormatted = "";
       if (dateCell) {
         const [day, month, year] = dateCell.split("/");
-        rowDateFormatted = `${year}-${month}-${day}`; // Convertir a YYYY-MM-DD
+        rowDateFormatted = `${year}-${month}-${day}`;
       }
 
       let showRow = (!filterDate || rowDateFormatted === filterDate) &&
@@ -164,7 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 📌 BORRAR FILTROS
   clearFilterButton.addEventListener("click", () => {
     filterDateInput.value = "";
     filterDestinationInput.value = "";
@@ -173,5 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  populateDestinationList();
   loadDataFromServer();
 });

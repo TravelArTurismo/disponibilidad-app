@@ -382,3 +382,19 @@ button:active {
 #filter-button:hover {
   background-color: #123b75;
 }
+#filter-destination {
+  width: 100%;
+  max-width: 250px;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  background-color: #f4f6f7;
+  color: #34495e;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+#filter-destination:focus {
+  border-color: #f39c12;
+  background-color: #fff;
+}
