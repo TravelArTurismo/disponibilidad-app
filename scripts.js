@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const ADMIN_ID = "ADMIN";
   const ADMIN_PASSWORD = "1244";
 
-  let availableDestinations = new Set();
+
 
   const loadDataFromServer = () => {
     fetch("/data")
@@ -25,26 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         console.log("Datos recibidos del servidor:", data);
         populateTable(data);
-        extractDestinations(data);
       })
       .catch((error) => console.error("Error al cargar datos:", error));
   };
-
-  const extractDestinations = (data) => {
-    availableDestinations.clear();
-    data.forEach(row => {
-      if (row["DESTINO"]) {
-        availableDestinations.add(row["DESTINO"].trim().toLowerCase());
-      }
-    });
-  };
-
-  filterDestinationInput.addEventListener("input", () => {
-    const inputValue = filterDestinationInput.value.toLowerCase();
-    const suggestions = Array.from(availableDestinations).filter(dest => dest.includes(inputValue));
-    console.log("Sugerencias:", suggestions);
-    // Aquí podrías agregar lógica para mostrar un dropdown con las sugerencias
-  });
 
   loginButton.addEventListener("click", () => {
     const userId = document.getElementById("user-id").value.trim();
@@ -81,10 +64,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const formatDateString = (dateString) => {
     if (!dateString) return "N/A";
+
     const parts = dateString.split("/");
     if (parts.length === 3) {
-      let [day, month, year] = parts.map(part => part.padStart(2, "0"));
-      year = year.length === 2 ? `20${year}` : year;
+      let [day, month, year] = parts.map(part => part.padStart(2, "0")); // Asegurar formato de 2 dígitos
+      year = year.length === 2 ? `20${year}` : year; // Convertir año corto a largo
       return `${day}/${month}/${year}`;
     }
     return dateString;
@@ -107,15 +91,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     data.forEach((row) => {
       const tableRow = document.createElement("tr");
-      ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col) => {
+
+      ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col, index) => {
         const cell = document.createElement("td");
+
         if (col === "FECHA" && row[col]) {
-          cell.textContent = formatDateString(row[col]);
+          cell.textContent = formatDateString(row[col]); // ✅ Mostrar fecha en formato DD/MM/YYYY
         } else {
           cell.textContent = row[col] ? row[col] : "";
         }
+
         tableRow.appendChild(cell);
       });
+
       tableBody.appendChild(tableRow);
     });
   };
@@ -126,8 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Por favor, selecciona un archivo Excel.");
       return;
     }
+
     const formData = new FormData();
     formData.append("file", file);
+
     fetch("/upload", {
       method: "POST",
       body: formData,
@@ -152,24 +142,29 @@ document.addEventListener("DOMContentLoaded", () => {
     loginError.textContent = "";
   });
 
+  // 📌 FILTRO DE TABLA
   filterButton.addEventListener("click", () => {
-    const filterDate = filterDateInput.value;
+    const filterDate = filterDateInput.value; // Fecha del input en formato YYYY-MM-DD
     const filterDestination = filterDestinationInput.value.trim().toLowerCase();
 
     document.querySelectorAll("#availability-table tbody tr").forEach(row => {
-      const dateCell = row.cells[1]?.textContent.trim();
+      const dateCell = row.cells[1]?.textContent.trim(); // Fecha en formato DD/MM/YYYY
       const destinationCell = row.cells[0]?.textContent.trim().toLowerCase();
+
       let rowDateFormatted = "";
       if (dateCell) {
         const [day, month, year] = dateCell.split("/");
-        rowDateFormatted = `${year}-${month}-${day}`;
+        rowDateFormatted = `${year}-${month}-${day}`; // Convertir a YYYY-MM-DD
       }
+
       let showRow = (!filterDate || rowDateFormatted === filterDate) &&
                     (!filterDestination || destinationCell.includes(filterDestination));
+
       row.style.display = showRow ? "" : "none";
     });
   });
 
+  // 📌 BORRAR FILTROS
   clearFilterButton.addEventListener("click", () => {
     filterDateInput.value = "";
     filterDestinationInput.value = "";
