@@ -382,3 +382,53 @@ button:active {
 #filter-button:hover {
   background-color: #123b75;
 }
+/* Estilos para el input con datalist (dropdown) */
+#filter-destination {
+  width: 100%;
+  max-width: 250px; /* Ajuste del tamaño */
+  padding: 10px;
+  border: 2px solid #f39c12; /* Borde dorado */
+  border-radius: 8px;
+  font-size: 1em;
+  background-color: #f4f6f7; /* Fondo gris claro */
+  color: #34495e; /* Texto oscuro */
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  appearance: none; /* Elimina el estilo por defecto del navegador */
+  cursor: pointer;
+}
+
+#filter-destination:focus {
+  border-color: #e67e22; /* Borde naranja al enfocar */
+  background-color: #fff; /* Fondo blanco */
+  outline: none; /* Elimina el borde por defecto al enfocar */
+}
+
+/* Estilos para las opciones del datalist */
+#destinations-list {
+  background-color: #fff; /* Fondo blanco */
+  border: 2px solid #f39c12; /* Borde dorado */
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  max-height: 200px; /* Altura máxima */
+  overflow-y: auto; /* Scroll si hay muchas opciones */
+}
+
+#destinations-list option {
+  padding: 10px;
+  font-size: 1em;
+  color: #34495e; /* Texto oscuro */
+  background-color: #fff; /* Fondo blanco */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+}
+
+#destinations-list option:hover {
+  background-color: #f39c12; /* Fondo dorado al pasar el mouse */
+  color: #fff; /* Texto blanco */
+}
+
+/* Estilo cuando se selecciona una opción */
+#destinations-list option:checked {
+  background-color: #e67e22; /* Fondo naranja */
+  color: #fff; /* Texto blanco */
+}
