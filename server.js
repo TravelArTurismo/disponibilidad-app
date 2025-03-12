@@ -63,26 +63,13 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         const sheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
 
-        // Validar las fechas en los datos (supongamos que la fecha está en la columna "Fecha")
-        const isValid = jsonData.every(row => {
-            // Aquí asumimos que las fechas están en el formato 'YYYY-MM-DD' y se validan correctamente.
-            const date = row.Fecha; 
-            return !isNaN(new Date(date).getTime()); // Verifica si la fecha es válida
-        });
-
-        if (!isValid) {
-            res.status(400).json({ message: "❌ El archivo contiene fechas no válidas." });
-            fs.unlinkSync(filePath);  // Eliminar archivo subido en caso de error
-            return;
-        }
-
         // Guardar en la base de datos
         const client = await pool.connect();
         await client.query("TRUNCATE TABLE disponibilidad RESTART IDENTITY"); // Solo vacía, sin eliminar la estructura
         await client.query("INSERT INTO disponibilidad (datos) VALUES ($1)", [JSON.stringify(jsonData)]);
         client.release();
 
-        fs.unlinkSync(filePath);  // Eliminar archivo subido después de procesarlo
+        fs.unlinkSync(filePath);
         res.json({ message: "Disponibilidad actualizada correctamente ✅" });
     } catch (error) {
         res.status(500).json({ message: "❌ Error al procesar el archivo", error });

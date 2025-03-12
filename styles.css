@@ -432,16 +432,3 @@ button:active {
   background-color: #e67e22; /* Fondo naranja */
   color: #fff; /* Texto blanco */
 }
-.update-banner {
-  font-family: 'Arial', sans-serif; /* Fuente legible */
-  font-size: 18px;
-  font-weight: bold;
-  color: #333; /* Texto en negro */
-  background: #fef1b7; /* Fondo amarillo suave */
-  padding: 10px;
-  border-radius: 10px;
-  text-align: left; /* Alineado a la izquierda */
-  margin: 10px 0; /* Alineado al margen izquierdo sin margen automático */
-  width: fit-content;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-}
