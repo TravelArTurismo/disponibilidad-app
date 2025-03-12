@@ -11,7 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const filterDateInput = document.getElementById("filter-date");
   const filterDestinationInput = document.getElementById("filter-destination");
-  
+  filterDestinationInput.addEventListener("input", () => {
+  applyFilters();
+});
   const filterButton = document.getElementById("filter-button");
   const clearFilterButton = document.getElementById("clear-filter-button");
   
