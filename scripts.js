@@ -134,29 +134,40 @@ const applyFilters = () => {
   };
 
   uploadButton.addEventListener("click", () => {
-    const file = excelInput.files[0];
-    if (!file) {
-      alert("Por favor, selecciona un archivo Excel.");
-      return;
-    }
+  const file = excelInput.files[0];
+  if (!file) {
+    alert("Por favor, selecciona un archivo Excel.");
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("file", file);
+  const formData = new FormData();
+  formData.append("file", file);
 
-    fetch("/upload", {
-      method: "POST",
-      body: formData,
+  fetch("/upload", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      alert(data.message);
+      loadDataFromServer();
+      updateLastUpdateTime(); // 🔥 Actualizar la fecha y hora después de la carga
     })
-      .then((response) => response.json())
-      .then((data) => {
-        alert(data.message);
-        loadDataFromServer();
-      })
-      .catch((error) => {
-        alert("Error al subir el archivo.");
-        console.error("Error:", error);
-      });
-  });
+    .catch((error) => {
+      alert("Error al subir el archivo.");
+      console.error("Error:", error);
+    });
+});
+
+// Función para actualizar la fecha y hora en el cartel
+const updateLastUpdateTime = () => {
+  const now = new Date();
+  const formattedDate = now.toLocaleDateString("es-ES"); // Fecha en formato DD/MM/YYYY
+  const formattedTime = now.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" }); // Hora en formato HH:MM
+
+  const lastUpdateElement = document.getElementById("last-update");
+  lastUpdateElement.textContent = `Última actualización: ${formattedDate} - ${formattedTime}`;
+};
 
   logoutButton.addEventListener("click", () => {
     mainContent.classList.add("hidden");
