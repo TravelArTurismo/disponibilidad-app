@@ -21,6 +21,11 @@
   <div id="main-content" class="hidden">
     <button id="logout-button" class="logout-btn">Cerrar Sesión ❌</button>
 
+<div id="update-section" class="hidden">
+  <label id="update-label">Última actualización: -</label>
+  <button id="update-button" class="elegant-btn">Actualizar 🕒</button>
+</div>
+
     <div id="admin-tools">
       <input type="file" id="excel-input" accept=".xlsx, .xls">
       <button id="upload-button">Cargar 🔄</button>
@@ -28,7 +33,6 @@
     
     <h2>Disponibilidad Travelera 🌍</h2>
 
-    <!-- 📌 NUEVA SECCIÓN DE FILTRO -->
     <div id="filter-section">
       <label for="filter-date">Ingrese fecha a filtrar 📆</label>
       <input type="date" id="filter-date">
@@ -64,7 +68,6 @@
 
       <button id="filter-button">FILTRAR</button>
 
-
     </div>
 
     <table id="availability-table">
@@ -82,7 +85,7 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Las filas se generarán dinámicamente -->
+
       </tbody>
     </table>
   </div>

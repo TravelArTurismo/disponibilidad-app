@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const updateSection = document.getElementById("update-section");
+  const updateButton = document.getElementById("update-button");
+  const updateLabel = document.getElementById("update-label");
+  updateButton.classList.add("hidden"); // Ocultar el botón por defecto
+
   const loginSection = document.getElementById("login-section");
   const mainContent = document.getElementById("main-content");
   const adminTools = document.getElementById("admin-tools");
@@ -12,37 +17,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterDateInput = document.getElementById("filter-date");
   const filterDestinationInput = document.getElementById("filter-destination");
   filterDestinationInput.addEventListener("input", () => {
-  applyFilters();
-});
+    applyFilters();
+  });
   const filterButton = document.getElementById("filter-button");
   const clearFilterButton = document.getElementById("clear-filter-button");
-  
+
   // 📌 Función para aplicar filtros
-const applyFilters = () => {
-  const filterDate = filterDateInput.value; // Fecha del input en formato YYYY-MM-DD
-  const filterDestination = filterDestinationInput.value.trim().toLowerCase();
+  const applyFilters = () => {
+    const filterDate = filterDateInput.value; // Fecha del input en formato YYYY-MM-DD
+    const filterDestination = filterDestinationInput.value.trim().toLowerCase();
 
-  document.querySelectorAll("#availability-table tbody tr").forEach(row => {
-    const dateCell = row.cells[1]?.textContent.trim(); // Fecha en formato DD/MM/YYYY
-    const destinationCell = row.cells[0]?.textContent.trim().toLowerCase();
+    document.querySelectorAll("#availability-table tbody tr").forEach(row => {
+      const dateCell = row.cells[1]?.textContent.trim(); // Fecha en formato DD/MM/YYYY
+      const destinationCell = row.cells[0]?.textContent.trim().toLowerCase();
 
-    let rowDateFormatted = "";
-    if (dateCell) {
-      const [day, month, year] = dateCell.split("/");
-      rowDateFormatted = `${year}-${month}-${day}`; // Convertir a YYYY-MM-DD
-    }
+      let rowDateFormatted = "";
+      if (dateCell) {
+        const [day, month, year] = dateCell.split("/");
+        rowDateFormatted = `${year}-${month}-${day}`; // Convertir a YYYY-MM-DD
+      }
 
-    let showRow = (!filterDate || rowDateFormatted === filterDate) &&
-                  (!filterDestination || destinationCell.includes(filterDestination));
+      let showRow = (!filterDate || rowDateFormatted === filterDate) &&
+                    (!filterDestination || destinationCell.includes(filterDestination));
 
-    row.style.display = showRow ? "" : "none";
-  });
-};
+      row.style.display = showRow ? "" : "none";
+    });
+  };
 
   const ADMIN_ID = "ADMIN";
   const ADMIN_PASSWORD = "1244";
-
-
 
   const loadDataFromServer = () => {
     fetch("/data")
@@ -67,6 +70,8 @@ const applyFilters = () => {
       loginSection.classList.add("hidden");
       mainContent.classList.remove("hidden");
       adminTools.classList.remove("hidden");
+      updateSection.classList.remove("hidden"); // Mostrar la sección completa
+      updateButton.classList.remove("hidden"); // Mostrar el botón "Actualizar"
       loginError.textContent = "";
       loadDataFromServer();
     } else {
@@ -78,6 +83,8 @@ const applyFilters = () => {
     loginSection.classList.add("hidden");
     mainContent.classList.remove("hidden");
     adminTools.classList.add("hidden");
+    updateSection.classList.remove("hidden"); // Mostrar la sección completa
+    updateButton.classList.add("hidden"); // Ocultar el botón "Actualizar"
     loginError.textContent = "";
     loadDataFromServer();
   });
@@ -168,12 +175,33 @@ const applyFilters = () => {
   });
 
   filterButton.addEventListener("click", () => {
-  applyFilters();
-});
+    applyFilters();
+  });
 
-clearFilterButton.addEventListener("click", () => {
-  filterDateInput.value = ""; // Limpia el campo de fecha
-  filterDestinationInput.value = ""; // Limpia el campo de destino
-  applyFilters(); // Aplica los filtros (que ahora no filtrarán nada)
+  clearFilterButton.addEventListener("click", () => {
+    filterDateInput.value = ""; // Limpia el campo de fecha
+    filterDestinationInput.value = ""; // Limpia el campo de destino
+    applyFilters(); // Aplica los filtros (que ahora no filtrarán nada)
+  });
+
+  // Función para obtener la fecha y hora actual
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const date = now.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    const time = now.toLocaleTimeString("es-AR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+    return `Última actualización: ${date} ${time}`;
+  };
+
+  // Evento para el botón "Actualizar"
+  updateButton.addEventListener("click", () => {
+    updateLabel.textContent = getCurrentDateTime(); // Actualizar el label
+  });
 });
-   });
