@@ -444,7 +444,7 @@ button:active {
 /* Estilos para el label de última actualización */
 #last-update-label {
   display: inline-block; /* Hace que el label no ocupe todo el ancho */
-  font-size: 1.1em; /* Tamaño de la fuente */
+  font-size: 1.0em; /* Tamaño de la fuente */
   font-weight: 500; /* Grosor de la fuente (semi-negrita) */
   color: #34495e; /* Color de texto oscuro y elegante */
   text-align: center; /* Centra el texto */
