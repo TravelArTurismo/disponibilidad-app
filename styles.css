@@ -432,37 +432,3 @@ button:active {
   background-color: #e67e22; /* Fondo naranja */
   color: #fff; /* Texto blanco */
 }
-/* Estilos para el contenedor del label y el botón */
-#update-section {
-  margin-top: 20px;
-  text-align: center;
-}
-
-/* Estilos para el label */
-#update-label {
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  color: #6c757d; /* Color gris suave */
-  margin-right: 10px;
-}
-
-/* Estilos para el botón "Actualizar" */
-#update-button.elegant-btn {
-  background-color: #a8dadc; /* Color pastel suave */
-  color: #1d3557; /* Color de texto oscuro para contraste */
-  border: none;
-  padding: 10px 20px;
-  font-family: 'Arial', sans-serif;
-  font-size: 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#update-button.elegant-btn:hover {
-  background-color: #83c5be; /* Color pastel más oscuro al pasar el mouse */
-}
-/* Clase para ocultar elementos */
-.hidden {
-  display: none;
-}
