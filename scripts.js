@@ -133,30 +133,36 @@ const applyFilters = () => {
     });
   };
 
-  uploadButton.addEventListener("click", () => {
-    const file = excelInput.files[0];
-    if (!file) {
-      alert("Por favor, selecciona un archivo Excel.");
-      return;
-    }
+uploadButton.addEventListener("click", () => {
+  const file = excelInput.files[0];
+  if (!file) {
+    alert("Por favor, selecciona un archivo Excel.");
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("file", file);
+  const formData = new FormData();
+  formData.append("file", file);
 
-    fetch("/upload", {
-      method: "POST",
-      body: formData,
+  fetch("/upload", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      alert(data.message);
+      loadDataFromServer();
+
+      // Actualizar el label "Última actualización"
+      const lastUpdateLabel = document.getElementById("last-update-label");
+      if (data.lastUpdate) {
+        lastUpdateLabel.textContent = `Última actualización: ${data.lastUpdate}`;
+      }
     })
-      .then((response) => response.json())
-      .then((data) => {
-        alert(data.message);
-        loadDataFromServer();
-      })
-      .catch((error) => {
-        alert("Error al subir el archivo.");
-        console.error("Error:", error);
-      });
-  });
+    .catch((error) => {
+      alert("Error al subir el archivo.");
+      console.error("Error:", error);
+    });
+});
 
   logoutButton.addEventListener("click", () => {
     mainContent.classList.add("hidden");

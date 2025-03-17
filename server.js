@@ -54,26 +54,42 @@ async function checkInitialData() {
 }
 checkInitialData();
 
-// 📌 Ruta para subir un archivo Excel y guardarlo en PostgreSQL
 app.post("/upload", upload.single("file"), async (req, res) => {
-    try {
-        const filePath = req.file.path;
-        const workbook = XLSX.readFile(filePath);
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
+  try {
+    const filePath = req.file.path;
+    const workbook = XLSX.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "", raw: false });
 
-        // Guardar en la base de datos
-        const client = await pool.connect();
-        await client.query("TRUNCATE TABLE disponibilidad RESTART IDENTITY"); // Solo vacía, sin eliminar la estructura
-        await client.query("INSERT INTO disponibilidad (datos) VALUES ($1)", [JSON.stringify(jsonData)]);
-        client.release();
+    // Guardar en la base de datos
+    const client = await pool.connect();
+    await client.query("TRUNCATE TABLE disponibilidad RESTART IDENTITY"); // Solo vacía, sin eliminar la estructura
+    await client.query("INSERT INTO disponibilidad (datos) VALUES ($1)", [JSON.stringify(jsonData)]);
+    client.release();
 
-        fs.unlinkSync(filePath);
-        res.json({ message: "Disponibilidad actualizada correctamente ✅" });
-    } catch (error) {
-        res.status(500).json({ message: "❌ Error al procesar el archivo", error });
-    }
+    fs.unlinkSync(filePath);
+
+    // Obtener la fecha y hora actual
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+    const formattedTime = now.toLocaleTimeString("es-AR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    // Enviar respuesta con la fecha y hora actual
+    res.json({
+      message: "Disponibilidad actualizada correctamente ✅",
+      lastUpdate: `${formattedDate} - ${formattedTime} hs.`, // Formato: DD/MM/YYYY - HH:MM hs.
+    });
+  } catch (error) {
+    res.status(500).json({ message: "❌ Error al procesar el archivo", error });
+  }
 });
 
 // 📌 Ruta para obtener los datos desde PostgreSQL
