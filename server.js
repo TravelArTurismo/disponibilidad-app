@@ -70,17 +70,19 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     fs.unlinkSync(filePath);
 
-    // Obtener la fecha y hora actual
-    const now = new Date();
-    const formattedDate = now.toLocaleDateString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-    const formattedTime = now.toLocaleTimeString("es-AR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+const now = new Date();
+const formattedDate = now.toLocaleDateString("es-AR", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  timeZone: "America/Argentina/Buenos_Aires", // Asegura la zona horaria correcta
+});
+const formattedTime = now.toLocaleTimeString("es-AR", {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false, // Formato de 24 horas
+  timeZone: "America/Argentina/Buenos_Aires", // Asegura la zona horaria correcta
+});
 
     // Enviar respuesta con la fecha y hora actual
     res.json({
