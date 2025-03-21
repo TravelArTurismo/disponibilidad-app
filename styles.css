@@ -454,3 +454,28 @@ button:active {
   transform: translateY(-2px); /* Efecto de levantar ligeramente */
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
 }
+
+/* Estilos para el nuevo enlace */
+#website-link {
+  display: inline-block; /* Ajusta el tamaño al contenido */
+  margin-top: 20px; /* Espacio arriba del enlace */
+  font-size: 1em; /* Tamaño de fuente más pequeño para móviles */
+  color: #2980b9; /* Color azul suave */
+  text-decoration: none; /* Quita el subrayado por defecto */
+  font-weight: 400; /* Grosor de la fuente (normal) */
+  font-style: italic; /* Texto en cursiva */
+  padding: 8px 16px; /* Espaciado interno reducido */
+  border-radius: 20px; /* Bordes redondeados */
+  background-color: rgba(41, 128, 185, 0.1); /* Fondo azul muy claro y transparente */
+  transition: all 0.3s ease; /* Transición suave para todos los efectos */
+}
+
+#website-link:hover {
+  color: #ffffff; /* Texto blanco al hacer hover */
+  background-color: #2980b9; /* Fondo azul al hacer hover */
+  transform: scale(1.05); /* Efecto de escala sutil */
+}
+
+#website-link:active {
+  transform: scale(1); /* Vuelve a su tamaño original al hacer clic */
+}
