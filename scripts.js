@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const filterDateInput = document.getElementById("filter-date");
   const filterDestinationInput = document.getElementById("filter-destination");
+  filterDateInput.addEventListener("input", () => {
+  applyFilters();
+});
   filterDestinationInput.addEventListener("input", () => {
   applyFilters();
 });
