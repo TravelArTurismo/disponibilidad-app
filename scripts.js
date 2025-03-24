@@ -12,40 +12,43 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterDateInput = document.getElementById("filter-date");
   const filterDestinationInput = document.getElementById("filter-destination");
   filterDateInput.addEventListener("input", () => {
-  applyFilters();
-});
+    applyFilters();
+  });
   filterDestinationInput.addEventListener("input", () => {
-  applyFilters();
-});
+    applyFilters();
+  });
   const filterButton = document.getElementById("filter-button");
   const clearFilterButton = document.getElementById("clear-filter-button");
-  
-  // 📌 Función para aplicar filtros
-const applyFilters = () => {
-  const filterDate = filterDateInput.value; // Fecha del input en formato YYYY-MM-DD
-  const filterDestination = filterDestinationInput.value.trim().toLowerCase();
 
-  document.querySelectorAll("#availability-table tbody tr").forEach(row => {
-    const dateCell = row.cells[1]?.textContent.trim(); // Fecha en formato DD/MM/YYYY
-    const destinationCell = row.cells[0]?.textContent.trim().toLowerCase();
 
-    let rowDateFormatted = "";
-    if (dateCell) {
-      const [day, month, year] = dateCell.split("/");
-      rowDateFormatted = `${year}-${month}-${day}`; // Convertir a YYYY-MM-DD
-    }
-
-    let showRow = (!filterDate || rowDateFormatted === filterDate) &&
-                  (!filterDestination || destinationCell.includes(filterDestination));
-
-    row.style.display = showRow ? "" : "none";
-  });
-};
+  const hashPassword = (password) => {
+    return btoa(password);
+  };
 
   const ADMIN_ID = "ADMIN";
-  const ADMIN_PASSWORD = "1244";
+  const ADMIN_PASSWORD_HASH = "MTI0NA==";
 
+  // 📌 Función para aplicar filtros
+  const applyFilters = () => {
+    const filterDate = filterDateInput.value;
+    const filterDestination = filterDestinationInput.value.trim().toLowerCase();
 
+    document.querySelectorAll("#availability-table tbody tr").forEach(row => {
+      const dateCell = row.cells[1]?.textContent.trim();
+      const destinationCell = row.cells[0]?.textContent.trim().toLowerCase();
+
+      let rowDateFormatted = "";
+      if (dateCell) {
+        const [day, month, year] = dateCell.split("/");
+        rowDateFormatted = `${year}-${month}-${day}`;
+      }
+
+      let showRow = (!filterDate || rowDateFormatted === filterDate) &&
+                    (!filterDestination || destinationCell.includes(filterDestination));
+
+      row.style.display = showRow ? "" : "none";
+    });
+  };
 
   const loadDataFromServer = () => {
     fetch("/data")
@@ -66,7 +69,10 @@ const applyFilters = () => {
       return;
     }
 
-    if (userId === ADMIN_ID && userPassword === ADMIN_PASSWORD) {
+    const userPasswordHash = hashPassword(userPassword);
+
+
+    if (userId === ADMIN_ID && userPasswordHash === ADMIN_PASSWORD_HASH) {
       loginSection.classList.add("hidden");
       mainContent.classList.remove("hidden");
       adminTools.classList.remove("hidden");
@@ -171,12 +177,12 @@ const applyFilters = () => {
   });
 
   filterButton.addEventListener("click", () => {
-  applyFilters();
-});
+    applyFilters();
+  });
 
-clearFilterButton.addEventListener("click", () => {
-  filterDateInput.value = ""; // Limpia el campo de fecha
-  filterDestinationInput.value = ""; // Limpia el campo de destino
-  applyFilters(); // Aplica los filtros (que ahora no filtrarán nada)
+  clearFilterButton.addEventListener("click", () => {
+    filterDateInput.value = ""; // Limpia el campo de fecha
+    filterDestinationInput.value = ""; // Limpia el campo de destino
+    applyFilters(); // Aplica los filtros (que ahora no filtrarán nada)
+  });
 });
-   });
