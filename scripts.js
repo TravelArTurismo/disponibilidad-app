@@ -113,34 +113,63 @@ document.addEventListener("DOMContentLoaded", () => {
     tableBody.innerHTML = "";
 
     if (data.length === 0) {
-      const emptyRow = document.createElement("tr");
-      const emptyCell = document.createElement("td");
-      emptyCell.textContent = "No hay datos disponibles";
-      emptyCell.setAttribute("colspan", "9");
-      emptyCell.style.textAlign = "center";
-      emptyRow.appendChild(emptyCell);
-      tableBody.appendChild(emptyRow);
-      return;
+        const emptyRow = document.createElement("tr");
+        const emptyCell = document.createElement("td");
+        emptyCell.textContent = "No hay datos disponibles";
+        emptyCell.setAttribute("colspan", "9");
+        emptyCell.style.textAlign = "center";
+        emptyRow.appendChild(emptyCell);
+        tableBody.appendChild(emptyRow);
+        return;
     }
 
     data.forEach((row) => {
-      const tableRow = document.createElement("tr");
+        const tableRow = document.createElement("tr");
 
-      ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col, index) => {
-        const cell = document.createElement("td");
+        ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col, index) => {
+            const cell = document.createElement("td");
 
-        if (col === "FECHA" && row[col]) {
-          cell.textContent = formatDateString(row[col]); // ✅ Mostrar fecha en formato DD/MM/YYYY
-        } else {
-          cell.textContent = row[col] ? row[col] : "";
-        }
+            // Formatear fecha (sin cambios)
+            if (col === "FECHA" && row[col]) {
+                cell.textContent = formatDateString(row[col]);
+            } 
+            // Nueva lógica para la columna DISPONIBLE
+            else if (col === "DISPONIBLE") {
+                const disponibilidad = parseInt(row[col]) || 0; // Convertir a número
+                let texto = "";
+                let color = "";
 
-        tableRow.appendChild(cell);
-      });
+                if (disponibilidad >= 15 && disponibilidad <= 50) {
+                    texto = "DISPONIBLE";
+                    color = "#4CAF50"; // Verde
+                } else if (disponibilidad >= 5 && disponibilidad < 15) {
+                    texto = "POCA DISPONIBILIDAD";
+                    color = "#FFC107"; // Amarillo
+                } else if (disponibilidad >= 0 && disponibilidad < 5) {
+                    texto = "AGOTADO";
+                    color = "#F44336"; // Rojo
+                } else {
+                    texto = "N/A"; // Valor por defecto
+                    color = "#E0E0E0"; // Gris
+                }
 
-      tableBody.appendChild(tableRow);
+                cell.textContent = texto;
+                cell.style.backgroundColor = color;
+                cell.style.color = "white";
+                cell.style.fontWeight = "bold";
+                cell.style.textAlign = "center";
+            } 
+            // Para otras columnas (sin cambios)
+            else {
+                cell.textContent = row[col] ? row[col] : "";
+            }
+
+            tableRow.appendChild(cell);
+        });
+
+        tableBody.appendChild(tableRow);
     });
-  };
+};
 
   uploadButton.addEventListener("click", () => {
     const file = excelInput.files[0];
