@@ -139,13 +139,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 let texto = "";
                 let color = "";
 
-                if (disponibilidad >= 36 && disponibilidad <= 57) {
+                if (disponibilidad >= 35 && disponibilidad <= 57) {
                     texto = "DISPONIBLE";
                     color = "#4CAF50"; // Verde
                 } else if (disponibilidad >= 5 && disponibilidad < 35) {
                     texto = "POCA DISPONIBILIDAD";
                     color = "#FFC107"; // Amarillo
-                } else if (disponibilidad >= 0 && disponibilidad < 4) {
+                } else if (disponibilidad >= 0 && disponibilidad < 5) {
                     texto = "AGOTADO";
                     color = "#F44336"; // Rojo
                 } else {
