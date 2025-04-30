@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 // 📌 Conexión a la Base de Datos
 const pool = new Pool({
-    connectionString: "postgresql://disponibilidad_db_user:rFctmHT9gQO7LYSGd1RH2jRETydajEGs@dpg-cv26sbt2ng1s738n66ag-a.oregon-postgres.render.com/disponibilidad_db",
+    connectionString: "postgresql://disponibilidad_db_user:rn1R2c9gu2NrlQIdW0zG73q9MLjEuOw4@dpg-d08oel9r0fns73dksneg-a:5432/disponibilidad_db_msxf",
     ssl: { rejectUnauthorized: false }
 });
 
