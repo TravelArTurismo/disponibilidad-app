@@ -13,6 +13,15 @@ body {
   font-size: 16px;
 }
 
+/* Fondo especial solo para pantalla de login */
+body:has(.centered:not(.hidden)) {
+  background-image: url('https://images.unsplash.com/photo-1671716784499-a3d26826d844?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 /* Sección centrada de login */
 .centered {
   text-align: center;
@@ -23,12 +32,42 @@ body {
   display: none;
 }
 
+/* --- VERSIÓN FINAL CON COLOR #34495e --- */
 h1 {
-  font-size: 2.2em;
-  font-weight: 350;
-  color: #34495e; /* Gris azulado elegante */
-  margin-bottom: 10px;
-  text-transform: uppercase;
+  font-size: 3em;
+  font-weight: 600;
+  color: #34495e; /* Color gris-azulado oscuro como solicitaste */
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+  font-family: "Century Gothic", "Arial Narrow", sans-serif;
+  text-shadow: 
+    0 1px 3px rgba(255,255,255,0.8), /* Sombra blanca para contraste */
+    0 2px 5px rgba(0,0,0,0.1); /* Sombra oscura sutil */
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+h1::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #34495e, transparent); /* Mismo color que el texto */
+  opacity: 0.7;
+}
+
+/* Ajuste para móviles */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.2em;
+    letter-spacing: 1px;
+    text-shadow: 
+      0 1px 2px rgba(255,255,255,0.8),
+      0 1px 3px rgba(0,0,0,0.1);
+  }
 }
 
 h2 {
@@ -39,7 +78,7 @@ h2 {
 }
 
 .login-box {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.85); /* Cambiado a semi-transparente */
   padding: 40px;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
@@ -455,27 +494,27 @@ button:active {
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
 }
 
-/* Estilos para el nuevo enlace */
+/* Estilos para el nuevo enlace - Versión final */
 #website-link {
-  display: inline-block; /* Ajusta el tamaño al contenido */
-  margin-top: 20px; /* Espacio arriba del enlace */
-  font-size: 1em; /* Tamaño de fuente más pequeño para móviles */
-  color: #2980b9; /* Color azul suave */
-  text-decoration: none; /* Quita el subrayado por defecto */
-  font-weight: 400; /* Grosor de la fuente (normal) */
-  font-style: italic; /* Texto en cursiva */
-  padding: 8px 16px; /* Espaciado interno reducido */
-  border-radius: 20px; /* Bordes redondeados */
-  background-color: rgba(41, 128, 185, 0.1); /* Fondo azul muy claro y transparente */
-  transition: all 0.3s ease; /* Transición suave para todos los efectos */
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 1em;
+  color: #ffffff; /* Texto blanco para mejor contraste */
+  text-decoration: none;
+  font-weight: 400;
+  font-style: italic;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: #2980b9; /* Fondo azul permanente */
+  transition: all 0.3s ease; /* Transición suave para efectos */
 }
 
+/* Efecto hover: se agranda un poco */
 #website-link:hover {
-  color: #ffffff; /* Texto blanco al hacer hover */
-  background-color: #2980b9; /* Fondo azul al hacer hover */
-  transform: scale(1.05); /* Efecto de escala sutil */
+  transform: scale(1.05); /* Escala del 5% más grande */
 }
 
+/* Vuelve a su tamaño normal al hacer clic */
 #website-link:active {
-  transform: scale(1); /* Vuelve a su tamaño original al hacer clic */
+  transform: scale(1);
 }
