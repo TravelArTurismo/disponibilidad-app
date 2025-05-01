@@ -505,7 +505,7 @@ button:active {
   font-style: italic;
   padding: 8px 16px;
   border-radius: 20px;
-  background-color: #2980b9; /* Fondo azul permanente */
+  background-color: #1A5074; /* Fondo azul permanente */
   transition: all 0.3s ease; /* Transición suave para efectos */
 }
 
