@@ -209,9 +209,11 @@ document.addEventListener("DOMContentLoaded", () => {
     applyFilters();
   });
 
-  clearFilterButton.addEventListener("click", () => {
-    filterDateInput.value = ""; // Limpia el campo de fecha
-    filterDestinationInput.value = ""; // Limpia el campo de destino
-    applyFilters(); // Aplica los filtros (que ahora no filtrarán nada)
-  });
+clearFilterButton.addEventListener("click", () => {
+  filterDateInput.value = ""; // Limpia el campo de fecha
+  filterDateInput.type = "text"; // Asegura que vuelva a ser tipo text
+  filterDateInput.placeholder = "Seleccione una fecha 📅"; // Restablece el placeholder
+  filterDestinationInput.value = ""; // Limpia el campo de destino
+  applyFilters(); // Aplica los filtros (que ahora no filtrarán nada)
+});
 });
