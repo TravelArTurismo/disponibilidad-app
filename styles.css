@@ -255,21 +255,19 @@ button:active {
   display: block; /* Cada label ocupa su propia línea */
 }
 
-/* Estilo del input de fecha */
-.filter-container input[type="date"] {
+#filter-date {
   width: 100%;
-  max-width: 200px; /* Tamaño reducido */
+  max-width: 180px; /* Ajuste del tamaño para que coincida */
   padding: 10px;
-  border: 2px solid #f39c12;
+  border: 2px solid #f39c12; /* Borde dorado igual que el destino */
   border-radius: 8px;
   font-size: 1em;
-  background-color: #f4f6f7;
-  color: #34495e;
+  background-color: #f4f6f7; /* Fondo gris claro */
+  color: #34495e; /* Texto oscuro */
   transition: border-color 0.3s ease, background-color 0.3s ease;
-  text-align: center;
+  appearance: none; /* Elimina el estilo por defecto */
   cursor: pointer;
-  appearance: none;
-  position: relative;
+  text-align: center;
 }
 
 /* Agregar un icono de calendario */
