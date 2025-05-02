@@ -63,9 +63,8 @@ www.travelarturismo.com.ar </a>
 <option value="SALTA AEREO">
 
 </datalist>
-      
-      <label for="filter-date"></label>
-      <input type="date" id="filter-date">
+<label for="filter-date"></label>
+<input type="text" id="filter-date" placeholder="Seleccione una fecha 📅" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
 
 
 <button id="clear-filter-button">BORRAR FILTROS</button> 

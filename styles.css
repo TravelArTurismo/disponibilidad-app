@@ -257,7 +257,7 @@ button:active {
 
 #filter-date {
   width: 100%;
-  max-width: 180px; /* Ajuste del tamaño para que coincida */
+  max-width: 200px; /* Ajuste del tamaño para que coincida */
   padding: 10px;
   border: 2px solid #f39c12; /* Borde dorado igual que el destino */
   border-radius: 8px;
