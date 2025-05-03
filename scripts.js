@@ -205,10 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loginError.textContent = "";
   });
 
-  filterButton.addEventListener("click", () => {
-    applyFilters();
-  });
-
 clearFilterButton.addEventListener("click", () => {
   filterDateInput.value = ""; // Limpia el campo de fecha
   filterDateInput.type = "text"; // Asegura que vuelva a ser tipo text

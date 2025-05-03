@@ -314,24 +314,6 @@ button:active {
   background-color: #fff;
 }
 
-/* Estilos del botón de filtrar */
-.filter-container button {
-  background-color: #2980b9;
-  color: #fff;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  align-self: center; /* Centrar botón */
-  margin-top: 10px;
-}
-
-.filter-container button:hover {
-  background-color: #3498db;
-  transform: translateY(-2px);
-}
 
 /* Estilos para la tabla filtrada */
 #filtered-table {
