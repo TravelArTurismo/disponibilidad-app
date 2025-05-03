@@ -8,18 +8,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const excelInput = document.getElementById("excel-input");
   const logoutButton = document.getElementById("logout-button");
   const loginError = document.getElementById("login-error");
+  
+  let allDestinations = new Set(); // Para almacenar destinos únicos
+  let allDates = new Set(); // Para almacenar fechas únicas
+  let tableData = []; // Para guardar todos los datos de la tabla
 
   const filterDateInput = document.getElementById("filter-date");
   const filterDestinationInput = document.getElementById("filter-destination");
-  filterDateInput.addEventListener("input", () => {
-    applyFilters();
-  });
-  filterDestinationInput.addEventListener("input", () => {
-    applyFilters();
-  });
   const filterButton = document.getElementById("filter-button");
   const clearFilterButton = document.getElementById("clear-filter-button");
-
 
   const hashPassword = (password) => {
     return btoa(password);
@@ -28,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const ADMIN_ID = "ADMIN";
   const ADMIN_PASSWORD_HASH = "MTI0NA==";
 
-  // 📌 Función para aplicar filtros
+  // Función para aplicar filtros
   const applyFilters = () => {
     const filterDate = filterDateInput.value;
     const filterDestination = filterDestinationInput.value.trim().toLowerCase();
@@ -50,12 +47,68 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  // Función para actualizar opciones de destino
+  const updateDestinationOptions = (filterDate = null) => {
+    const datalist = document.getElementById('destinations-list');
+    datalist.innerHTML = '';
+
+    const destinations = filterDate 
+      ? [...new Set(tableData
+          .filter(item => formatDateString(item.FECHA) === filterDate)
+          .map(item => item.DESTINO)
+        )]
+      : [...allDestinations];
+
+    destinations.forEach(dest => {
+      const option = document.createElement('option');
+      option.value = dest;
+      datalist.appendChild(option);
+    });
+  };
+
+  // Función para actualizar opciones de fecha
+  const updateDateOptions = (filterDestination = null) => {
+    const dateInput = document.getElementById('filter-date');
+    
+    if (filterDestination) {
+      const availableDates = [...new Set(tableData
+        .filter(item => item.DESTINO === filterDestination)
+        .map(item => formatDateString(item.FECHA))
+      )];
+      
+      dateInput.min = Math.min(...availableDates.map(d => new Date(d)));
+      dateInput.max = Math.max(...availableDates.map(d => new Date(d)));
+    } else {
+      dateInput.removeAttribute('min');
+      dateInput.removeAttribute('max');
+    }
+  };
+
+  // Event listeners para filtros
+  filterDateInput.addEventListener("input", () => {
+    const selectedDate = filterDateInput.value;
+    if (selectedDate) {
+      updateDestinationOptions(selectedDate);
+      filterDestinationInput.value = ""; // Resetear destino si hay fecha
+    }
+    applyFilters();
+  });
+
+  filterDestinationInput.addEventListener("input", () => {
+    const selectedDest = filterDestinationInput.value.trim();
+    if (selectedDest) {
+      updateDateOptions(selectedDest);
+      filterDateInput.value = ""; // Resetear fecha si hay destino
+    }
+    applyFilters();
+  });
+
   const loadDataFromServer = () => {
     fetch("/data")
       .then((response) => response.json())
       .then((data) => {
-        console.log("Datos recibidos del servidor:", data);
         populateTable(data);
+        updateDestinationOptions(); // Inicializar con todos los destinos
       })
       .catch((error) => console.error("Error al cargar datos:", error));
   };
@@ -70,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const userPasswordHash = hashPassword(userPassword);
-
 
     if (userId === ADMIN_ID && userPasswordHash === ADMIN_PASSWORD_HASH) {
       loginSection.classList.add("hidden");
@@ -109,67 +161,75 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const populateTable = (data) => {
+    allDestinations.clear(); // Limpiar sets
+    allDates.clear();
+    tableData = data; // Guardar datos completos
+
     const tableBody = document.querySelector("#availability-table tbody");
     tableBody.innerHTML = "";
 
     if (data.length === 0) {
-        const emptyRow = document.createElement("tr");
-        const emptyCell = document.createElement("td");
-        emptyCell.textContent = "No hay datos disponibles";
-        emptyCell.setAttribute("colspan", "9");
-        emptyCell.style.textAlign = "center";
-        emptyRow.appendChild(emptyCell);
-        tableBody.appendChild(emptyRow);
-        return;
+      const emptyRow = document.createElement("tr");
+      const emptyCell = document.createElement("td");
+      emptyCell.textContent = "No hay datos disponibles";
+      emptyCell.setAttribute("colspan", "9");
+      emptyCell.style.textAlign = "center";
+      emptyRow.appendChild(emptyCell);
+      tableBody.appendChild(emptyRow);
+      return;
     }
 
     data.forEach((row) => {
-        const tableRow = document.createElement("tr");
+      const tableRow = document.createElement("tr");
 
-        ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col, index) => {
-            const cell = document.createElement("td");
+      // Guardar destinos y fechas únicas
+      if (row.DESTINO) allDestinations.add(row.DESTINO);
+      if (row.FECHA) allDates.add(formatDateString(row.FECHA));
 
-            // Formatear fecha (sin cambios)
-            if (col === "FECHA" && row[col]) {
-                cell.textContent = formatDateString(row[col]);
-            } 
-            // Nueva lógica para la columna DISPONIBLE
-            else if (col === "DISPONIBLE") {
-                const disponibilidad = parseInt(row[col]) || 0; // Convertir a número
-                let texto = "";
-                let color = "";
+      ["DESTINO", "FECHA", "DISPONIBLE", "TARIFA", "GTO ADM", "DURACION", "HOTEL", "REGIMEN", "OBSERVACIONES"].forEach((col, index) => {
+        const cell = document.createElement("td");
 
-                if (disponibilidad >= 35 && disponibilidad <= 57) {
-                    texto = "DISPONIBLE";
-                    color = "#4CAF50"; // Verde
-                } else if (disponibilidad >= 5 && disponibilidad < 35) {
-                    texto = "POCA DISPONIBILIDAD";
-                    color = "#FFC107"; // Amarillo
-                } else if (disponibilidad >= 0 && disponibilidad < 5) {
-                    texto = "AGOTADO";
-                    color = "#F44336"; // Rojo
-                } else {
-                    texto = "N/A"; // Valor por defecto
-                    color = "#E0E0E0"; // Gris
-                }
+        // Formatear fecha
+        if (col === "FECHA" && row[col]) {
+          cell.textContent = formatDateString(row[col]);
+        } 
+        // Lógica para la columna DISPONIBLE
+        else if (col === "DISPONIBLE") {
+          const disponibilidad = parseInt(row[col]) || 0;
+          let texto = "";
+          let color = "";
 
-                cell.textContent = texto;
-                cell.style.backgroundColor = color;
-                cell.style.color = "white";
-                cell.style.fontWeight = "bold";
-                cell.style.textAlign = "center";
-            } 
-            // Para otras columnas (sin cambios)
-            else {
-                cell.textContent = row[col] ? row[col] : "";
-            }
+          if (disponibilidad >= 35 && disponibilidad <= 57) {
+            texto = "DISPONIBLE";
+            color = "#4CAF50";
+          } else if (disponibilidad >= 5 && disponibilidad < 35) {
+            texto = "POCA DISPONIBILIDAD";
+            color = "#FFC107";
+          } else if (disponibilidad >= 0 && disponibilidad < 5) {
+            texto = "AGOTADO";
+            color = "#F44336";
+          } else {
+            texto = "N/A";
+            color = "#E0E0E0";
+          }
 
-            tableRow.appendChild(cell);
-        });
+          cell.textContent = texto;
+          cell.style.backgroundColor = color;
+          cell.style.color = "white";
+          cell.style.fontWeight = "bold";
+          cell.style.textAlign = "center";
+        } 
+        // Para otras columnas
+        else {
+          cell.textContent = row[col] ? row[col] : "";
+        }
 
-        tableBody.appendChild(tableRow);
+        tableRow.appendChild(cell);
+      });
+
+      tableBody.appendChild(tableRow);
     });
-};
+  };
 
   uploadButton.addEventListener("click", () => {
     const file = excelInput.files[0];
@@ -205,11 +265,13 @@ document.addEventListener("DOMContentLoaded", () => {
     loginError.textContent = "";
   });
 
-clearFilterButton.addEventListener("click", () => {
-  filterDateInput.value = ""; // Limpia el campo de fecha
-  filterDateInput.type = "text"; // Asegura que vuelva a ser tipo text
-  filterDateInput.placeholder = "Seleccione una fecha 📅"; // Restablece el placeholder
-  filterDestinationInput.value = ""; // Limpia el campo de destino
-  applyFilters(); // Aplica los filtros (que ahora no filtrarán nada)
-});
+  clearFilterButton.addEventListener("click", () => {
+    filterDateInput.value = "";
+    filterDateInput.type = "text";
+    filterDateInput.placeholder = "Seleccione una fecha 📅";
+    filterDestinationInput.value = "";
+    updateDestinationOptions();
+    updateDateOptions();
+    applyFilters();
+  });
 });
